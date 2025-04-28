@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from '../entities/task.entity';
@@ -7,19 +6,24 @@ import { TaskController } from './task.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { UserModule } from '../user/user.module';  
+import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task])],
+  imports: [
+    TypeOrmModule.forFeature([Task,User]),
+    UserModule,  
+  ],
   controllers: [TaskController],
   providers: [
     TaskService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard, 
+      useClass: JwtAuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,  
+      useClass: RolesGuard,
     },
   ],
 })

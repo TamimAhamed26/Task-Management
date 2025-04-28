@@ -37,12 +37,12 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
-
+  @Public()
   @Get('verify/:token')
   verify(@Param('token') token: string) {
     return this.authService.verifyEmail(token);
   }
-  
+  @Public()
   @Post('resend-verification')
 resendVerification(@Body('email') email: string) {
   return this.authService.resendVerificationEmail(email);

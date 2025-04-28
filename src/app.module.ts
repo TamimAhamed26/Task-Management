@@ -15,6 +15,7 @@ import { Task } from './entities/task.entity';
 import { TaskModule } from './task/task.module';
 import { TaskController } from './task/task.controller';
 import { UserController } from './user/user.controller';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { UserController } from './user/user.controller';
     FileModule,
     EmailModule,
     TaskModule,
+    ProgressModule,
   ],
 })
 export class AppModule implements NestModule {

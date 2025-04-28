@@ -140,7 +140,7 @@ export class AuthService {
     const rawToken = this.jwtService.sign({
       userId: user.id,
       email: user.email,
-    }, { expiresIn: '15m' }); 
+    }, { expiresIn: '30m' }); 
   
     const token = this.tokenRepo.create({
       token: rawToken,
@@ -221,11 +221,11 @@ export class AuthService {
     );
   
     if (!tokenEntity) {
-      // Optional: silent return or error, based on your logic
+
       return { message: 'Already logged out or token not found' };
     }
   
-    await this.tokenRepo.remove(tokenEntity); // or delete({ id: tokenEntity.id });
+    await this.tokenRepo.remove(tokenEntity); 
   
     return { message: 'Logged out successfully' };
   }

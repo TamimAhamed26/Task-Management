@@ -23,7 +23,7 @@ export class RolesGuard implements CanActivate {
 
     
     const hasRole = requiredRoles.some(role => role === user.role.toUpperCase());
-    console.log(`dsadas`,hasRole);
+    console.log(`Manager`,hasRole);
     if (!hasRole) {
       throw new ForbiddenException('Access Denied: Insufficient role.');
     }
