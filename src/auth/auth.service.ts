@@ -221,11 +221,12 @@ export class AuthService {
     );
   
     if (!tokenEntity) {
-
       return { message: 'Already logged out or token not found' };
     }
   
-    await this.tokenRepo.remove(tokenEntity); 
+    await this.tokenRepo.remove(tokenEntity);
+  
+    this.jwtBlacklist.add(rawToken);
   
     return { message: 'Logged out successfully' };
   }
