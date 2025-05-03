@@ -9,15 +9,15 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { FileService } from '../file/file.service'; // Import FileService 
+import { FileService } from '../file/file.service'; 
 
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, // Inject FileService here
-    private readonly fileService: FileService,  // Inject FileService here
+    private readonly userRepository: Repository<User>,
+    private readonly fileService: FileService,  
 
 
   ) {}
@@ -32,11 +32,9 @@ export class UserService {
   async updateProfile(id: number, updateDto: UpdateProfileDto): Promise<string> {
       const user = await this.findById(id);
   
-      // Check for any invalid fields in the update
       const allowedFields = ['username', 'email', 'phone'];
       const updateKeys = Object.keys(updateDto);
   
-      // If any key is not part of the allowed fields, throw an error
       const invalidFields = updateKeys.filter(key => !allowedFields.includes(key));
       if (invalidFields.length > 0) {
           throw new ForbiddenException('Not permitted to update these fields, please use other routes.');
@@ -47,7 +45,13 @@ export class UserService {
       return 'Profile updated successfully';
   }
   
-
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { email },
+      relations: ['role'],
+    });
+  }
+  
   async updatePassword(id: number, dto: UpdatePasswordDto): Promise<string> {
     const user = await this.findById(id);
 

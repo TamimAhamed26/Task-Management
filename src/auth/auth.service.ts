@@ -169,7 +169,7 @@ export class AuthService {
       this.jwtService.verify(token); 
       return true;
     } catch (e) {
-      await this.tokenRepo.delete({ id: foundToken.id }); // Clean up
+      await this.tokenRepo.delete({ id: foundToken.id }); 
       return false;
     }
   }
@@ -199,7 +199,6 @@ export class AuthService {
   
     return { message: 'Password has been successfully reset.' };
   }
-  
   async logout(userId: number, token: string) {
     const rawToken = token?.startsWith('Bearer ') ? token.slice(7) : token;
   
@@ -230,5 +229,4 @@ export class AuthService {
   
     return { message: 'Logged out successfully' };
   }
-  
 }

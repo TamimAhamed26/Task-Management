@@ -18,10 +18,11 @@ export class FileService {
     const fileExtension = extname(file.originalname);
     const filename = `${Date.now()}${fileExtension}`;
 
-    // Save file locally
+    
     const filePath = path.join(this.uploadPath, filename);
     fs.writeFileSync(filePath, file.buffer);
 
-    return `${filename}`; 
+    return filename; 
   }
 }
+

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task, TaskStatus } from '../entities/task.entity'; 
 import { Repository, Between } from 'typeorm';
@@ -6,14 +6,22 @@ import { ProgressReportDto } from './dto/ProgressReportDto';
 import * as PDFDocument from 'pdfkit';
 import * as fs from 'fs';
 import axios from 'axios';
+import { UserService } from 'src/user/user.service';
+import { FileService } from 'src/file/file.service';
+import { EmailService } from 'src/email/email.service';
 
-@Injectable()
-export class ProgressService {
 
-  constructor(
-    @InjectRepository(Task)
-    private taskRepository: Repository<Task>,
-  ) {}
+  @Injectable()
+  export class ProgressService {
+    constructor(
+      @InjectRepository(Task)
+      private taskRepository: Repository<Task>,
+  
+      private readonly userService: UserService,
+      private readonly fileService: FileService,
+      private readonly emailService: EmailService,
+    ) {}
+  
 
   async generateWeeklyReport(): Promise<ProgressReportDto> {
     const today = new Date();
@@ -83,7 +91,7 @@ export class ProgressService {
       completedTasks,
       pendingTasks,
       completionPercentage: Number(completionPercentage.toFixed(2)),
-      weeklyGraphData: graphData, // (still using the same dto for now, can rename it if you want)
+      weeklyGraphData: graphData, 
     };
   }
 
@@ -122,6 +130,33 @@ export class ProgressService {
       page,
       limit,
     };
+  }
+  
+  async uploadReportFileAndNotifyManager(
+    file: Express.Multer.File,
+    uploaderEmail: string,
+  ): Promise<string> {
+    if (!file) {
+      throw new BadRequestException('No file provided');
+    }
+  
+    if (!uploaderEmail) {
+      throw new BadRequestException('Uploader email is required');
+    }
+  
+    const adminUser = await this.userService.findByEmail(uploaderEmail);
+  
+    if (!adminUser || adminUser.role.name !== 'Admin') {
+      throw new ForbiddenException('Email must belong to an Admin user');
+    }
+  
+    const filename = await this.fileService.uploadFile(file);
+  
+    const downloadLink = `http://localhost:3000/progress/download/${filename}`;
+  
+    await this.emailService.sendFileUploadConfirmation(adminUser.email, filename, downloadLink);
+  
+    return `File uploaded successfully as '${filename}'. Admin notified with download link.`;
   }
   
 async generateWeeklyReportPDF(): Promise<Buffer> {

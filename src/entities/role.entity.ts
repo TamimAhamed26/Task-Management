@@ -10,5 +10,5 @@ export class Role {
   name: string; 
   @OneToMany(() => User, user => user.role)
   users: User[];
-    static Collaborator: Role;
+   
 }

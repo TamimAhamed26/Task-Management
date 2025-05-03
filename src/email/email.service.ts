@@ -71,4 +71,38 @@ export class EmailService {
     };
   }
   
+  async sendFileUploadConfirmation(to: string, filename: string, downloadLink: string) {
+    const testAccount = await createTestAccount(); 
+  
+    const transporter = nodemailer.createTransport({
+      host: testAccount.smtp.host,
+      port: testAccount.smtp.port,
+      secure: testAccount.smtp.secure,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  
+    const info = await transporter.sendMail({
+      from: '"Task Manager App" <noreply@taskapp.com>',
+      to,
+      subject: 'File Upload Successful',
+      html: `
+        <p>Hello Admin,</p>
+        <p>A new file <strong>${filename}</strong> has been uploaded successfully to the system.</p>
+        <p><a href="${downloadLink}">Click here to download the report</a></p>
+        <p>Thank you!</p>
+      `,
+    });
+  
+    this.logger.log(`File upload email sent: ${getTestMessageUrl(info)}`);
+    return {
+      previewUrl: getTestMessageUrl(info),
+    };
+  }
+  
 }

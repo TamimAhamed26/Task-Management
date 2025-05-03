@@ -1,6 +1,7 @@
 // src/auth/guards/roles.guard.ts
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Role } from 'src/entities/role.entity';
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -23,7 +24,7 @@ export class RolesGuard implements CanActivate {
 
     
     const hasRole = requiredRoles.some(role => role === user.role.toUpperCase());
-    console.log(`Manager`,hasRole);
+    console.log('Logged in role',user.role,'.Sufficeient role',hasRole);
     if (!hasRole) {
       throw new ForbiddenException('Access Denied: Insufficient role.');
     }

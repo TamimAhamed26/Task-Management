@@ -16,12 +16,17 @@ import { TaskModule } from './task/task.module';
 import { TaskController } from './task/task.controller';
 import { UserController } from './user/user.controller';
 import { ProgressModule } from './progress/progress.module';
+import { PaymentModule } from './payment/payment.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -45,6 +50,7 @@ import { ProgressModule } from './progress/progress.module';
     EmailModule,
     TaskModule,
     ProgressModule,
+    PaymentModule,
   ],
 })
 export class AppModule implements NestModule {
