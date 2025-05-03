@@ -121,7 +121,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODQ3NDYxLCJleHAiOjE3NDU4NDkyNjF9.SGoubeCWftoAGemzAK6uuQZQm74fi8cVshz0UQK8MNE",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MDQwMzY4LCJleHAiOjE3NDYwNDIxNjh9.fgvrNPj4-E9_xg1dC8r_k6AqKoBJgFtuRVxN17qqZHw",
 									"type": "string"
 								}
 							]
@@ -299,6 +299,9 @@
 						},
 						{
 							"name": "searchbyKeyword",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -312,6 +315,10 @@
 								},
 								"method": "GET",
 								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
 								"url": {
 									"raw": "http://localhost:3000/tasks/search?keyword=Database",
 									"protocol": "http",
@@ -343,7 +350,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODY3MDM5LCJleHAiOjE3NDU4Njg4Mzl9.oGMit7PizNhQgaeeOx5eIi1HMoNie_yd5_CypNb2U6w",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODY5MjkxLCJleHAiOjE3NDU4NzEwOTF9.UEzGW0LHSodY64fZXaQG5AEUk7_t5L8SlE-gbk9OIZM",
 									"type": "string"
 								}
 							]
@@ -544,24 +551,188 @@
 				{
 					"name": "monthly-report",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODY5MjkxLCJleHAiOjE3NDU4NzEwOTF9.UEzGW0LHSodY64fZXaQG5AEUk7_t5L8SlE-gbk9OIZM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/progress/monthly-report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"progress",
+								"monthly-report"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "search_by_date",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MjY0MzA4LCJleHAiOjE3NDYyNjYxMDh9.QlISmW1H-xBh96xyM_saJd5mwkgBefkuYxepPBdQ3wA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/progress/search?startDate=2025-03-01&endDate=2025-04-27&sort=DESC&page=2&limit=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"progress",
+								"search"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-03-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-27"
+								},
+								{
+									"key": "sort",
+									"value": "DESC"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "save_pdf",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MjY0MzA4LCJleHAiOjE3NDYyNjYxMDh9.QlISmW1H-xBh96xyM_saJd5mwkgBefkuYxepPBdQ3wA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/progress/download-weekly-report-pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"progress",
+								"download-weekly-report-pdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload_report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MjY0MzA4LCJleHAiOjE3NDYyNjYxMDh9.QlISmW1H-xBh96xyM_saJd5mwkgBefkuYxepPBdQ3wA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/GIGABYTE/Downloads/251 Course Outline_Spring 2024_ 25_Engg. Ethics and Environmental Protection.pdf"
+								},
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/progress/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"progress",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_download",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE1LCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc0NjI2NDI4NywiZXhwIjoxNzQ2MjY2MDg3fQ.JRi-PEk4Onqp5M_XysMNPuGYPNyt6FV3jLLcMRgbbFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/progress/download/1746265209947.pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"progress",
+								"download",
+								"1746265209947.pdf"
+							]
+						}
 					},
 					"response": []
 				}
@@ -578,7 +749,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODc2ODYxLCJleHAiOjE3NDU4Nzg2NjF9.AFal23zYTJyuqV5Tdnhw0sFlYGQS2S0AC5_uXpxX_qw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MDQwMzY4LCJleHAiOjE3NDYwNDIxNjh9.fgvrNPj4-E9_xg1dC8r_k6AqKoBJgFtuRVxN17qqZHw",
 									"type": "string"
 								}
 							]
@@ -762,7 +933,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1ODc2ODYxLCJleHAiOjE3NDU4Nzg2NjF9.AFal23zYTJyuqV5Tdnhw0sFlYGQS2S0AC5_uXpxX_qw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ1OTM4NDQ1LCJleHAiOjE3NDU5NDAyNDV9.CI9VS63jEuB4djHTfSt0jPvIgZrRebPCkh4O0_L9MeY",
 									"type": "string"
 								}
 							]
@@ -779,6 +950,170 @@
 							"path": [
 								"users",
 								"dashboard"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "bonus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2MjcyMTUzLCJleHAiOjE3NDYyNzM5NTN9.kNmNsTzUbyEccwSVggdzubM5QtLIRrDmEf1rGpIjpl8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"taskId\": 1,\r\n  \"collaboratorId\": 2,\r\n  \"amount\": 50.00,\r\n  \"description\": \"Bonus for task completion\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/payment/bonus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payment",
+								"bonus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2Mjc0MjU3LCJleHAiOjE3NDYyNzYwNTd9.B7GG2efiiwc18n-Xp3ih8GdmRJwsaqgFK-cMrCpIQ4g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paymentIntentId\": \"pi_3RKeuXRqOhZNInIV0ZQlBFJ6\",\r\n  \"paymentMethodId\": \"pm_card_visa\" // Stripe test card\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/payment/update-payment-method",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payment",
+								"update-payment-method"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm_payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2Mjc0MjU3LCJleHAiOjE3NDYyNzYwNTd9.B7GG2efiiwc18n-Xp3ih8GdmRJwsaqgFK-cMrCpIQ4g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"success\": true,\r\n  \"status\": \"succeeded\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/payment/confirm?paymentIntentId=pi_3RKeuXRqOhZNInIV0ZQlBFJ6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payment",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "paymentIntentId",
+									"value": "pi_3RKeuXRqOhZNInIV0ZQlBFJ6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWFuYWdlckBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzQ2Mjc0MjU3LCJleHAiOjE3NDYyNzYwNTd9.B7GG2efiiwc18n-Xp3ih8GdmRJwsaqgFK-cMrCpIQ4g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/payment/status?paymentIntentId=pi_3RKeuXRqOhZNInIV0ZQlBFJ6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payment",
+								"status"
+							],
+							"query": [
+								{
+									"key": "paymentIntentId",
+									"value": "pi_3RKeuXRqOhZNInIV0ZQlBFJ6"
+								}
 							]
 						}
 					},
