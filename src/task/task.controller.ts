@@ -46,6 +46,11 @@ async searchTasks(@Query('keyword') keyword: string): Promise<Task[]> {
   ): Promise<Task> {
     return  this.taskService.assignCollaborator(id, body.collaboratorId) ;
   }
+@Get(':id')
+ @Roles('MANAGER')
+async getTaskById(@Param('id') id: number) {
+  return this.taskService.getTaskById(id);
+}
 
   @Patch(':id/set-deadline-priority')
   @Roles('MANAGER')

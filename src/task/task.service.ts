@@ -15,6 +15,30 @@ export class TaskService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+async getTaskById(taskId: number): Promise<TaskDto> {
+  const task = await this.taskRepository.findOne({
+    where: { id: taskId },
+    relations: ['createdBy', 'assignedTo', 'approvedBy'],
+  });
+  if (!task) {
+    throw new NotFoundException('Task not found.');
+  }
+  return {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    status: task.status,
+    priority: task.priority,
+    category: task.category,
+    dueDate: task.dueDate,
+    createdByUsername: task.createdBy?.username || '',
+    assignedToUsername: task.assignedTo?.username || '',
+    approvedByUsername: task.approvedBy?.username || '',
+    isCompleted: task.isCompleted,
+    createdAt: task.createdAt,
+    updatedAt: task.updatedAt,
+  };
+}
 
   async assignCollaborator(taskId: number, collaboratorId: number): Promise<Task> {
     const task = await this.taskRepository.findOne({ where: { id: taskId } });
