@@ -20,6 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { TokenType } from 'src/entities/token.entity';
 import { Public } from './decorators/public.decorator';
+import { GetUser } from './decorators/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -73,7 +74,10 @@ async getResetTokenMessage(@Param('token') token: string) {
 resetPassword(@Body() dto: ResetPasswordDto) {
   return this.authService.resetPassword(dto);
 }
-
+@Get('me')
+getCurrentUser(@GetUser() user: any) {
+  return user;
+}
 @Post('logout')
 @UseGuards(AuthGuard('jwt'))
 async logout(@Req() req: Request) {
