@@ -4,6 +4,7 @@ export class LoginDto {
   @IsEmail()
   @IsNotEmpty({message:"missing email"})
   email: string;
+  rememberMe?: boolean; 
 
   @IsNotEmpty()
   

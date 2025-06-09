@@ -78,7 +78,7 @@ async updateAvatar(id: number, avatarData: string | Express.Multer.File): Promis
 
     const fileName = await this.fileService.uploadFile(avatarData as Express.Multer.File);
 
-    user.avatarUrl = `http://localhost:3000/uploads/${fileName}`;
+    user.avatarUrl = `http://localhost:3001/uploads/${fileName}`;
   } else if (typeof avatarData === 'string' && avatarData.startsWith('http')) {
     user.avatarUrl = avatarData;
   } else {

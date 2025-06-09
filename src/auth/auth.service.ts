@@ -16,6 +16,7 @@ import { EmailService } from '../email/email.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto'; 
 import { Public } from './decorators/public.decorator';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -52,51 +53,52 @@ export class AuthService {
     };
   }
 
-  async login(dto: LoginDto) {
-    const user = await this.userRepo.findOne({
-      where: { email: dto.email },
-      relations: ['role'],
-    });
-  
-    if (!user || user.password !== dto.password) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-  
-    if (!user.isVerified) {
-      throw new UnauthorizedException('Email not verified');
-    }
-  
-    if (!user.role) {
-      throw new UnauthorizedException('Role not assigned');
-    }
-  
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role.name,
-    };
-  
-    const accessToken = this.jwtService.sign(payload, {
-      secret: 'mysecretkey',
-      expiresIn: '30m',
-    });
-  
-    const accessTokenEntity = this.tokenRepo.create({
-      user,
-      token: accessToken,
-      type: TokenType.ACCESS,
-    });
-  
-    await this.tokenRepo.save(accessTokenEntity);
-  
-    user.lastActiveAt = new Date();
-    await this.userRepo.save(user);
-  
-    return {
-      accessToken,
-    };
+async login(dto: LoginDto) {
+  const user = await this.userRepo.findOne({
+    where: { email: dto.email },
+    relations: ['role'],
+  });
+
+  if (!user || user.password !== dto.password) {
+    throw new UnauthorizedException('Invalid credentials');
   }
-  
+
+  if (!user.isVerified) {
+    throw new UnauthorizedException('Email not verified');
+  }
+
+  if (!user.role) {
+    throw new UnauthorizedException('Role not assigned');
+  }
+
+  const payload = {
+    sub: user.id,
+    email: user.email,
+    role: user.role.name,
+  };
+
+  // Extend expiry if rememberMe is true
+  const tokenExpiry = dto.rememberMe ? '7d' : '2m';
+
+  const accessToken = this.jwtService.sign(payload, {
+    secret: 'mysecretkey',
+    expiresIn: tokenExpiry,
+  });
+
+  const accessTokenEntity = this.tokenRepo.create({
+    user,
+    token: accessToken,
+    type: TokenType.ACCESS,
+  });
+
+  await this.tokenRepo.save(accessTokenEntity);
+
+  user.lastActiveAt = new Date();
+  await this.userRepo.save(user);
+
+  return { accessToken };
+}
+
   async verifyEmail(token: string) {
     const found = await this.tokenRepo.findOne({
       where: { token },
@@ -199,34 +201,46 @@ export class AuthService {
   
     return { message: 'Password has been successfully reset.' };
   }
-  async logout(userId: number, token: string) {
-    const rawToken = token?.startsWith('Bearer ') ? token.slice(7) : token;
-  
-    if (!rawToken) {
-      throw new BadRequestException('Token is missing or invalid');
-    }
-  
-    const user = await this.userRepo.findOne({
-      where: { id: userId },
-      relations: ['tokens'],
-    });
-  
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-  
-    const tokenEntity = user.tokens.find(
-      t => t.token === rawToken && t.type === TokenType.ACCESS,
-    );
-  
-    if (!tokenEntity) {
-      return { message: 'Already logged out or token not found' };
-    }
-  
-    await this.tokenRepo.remove(tokenEntity);
-  
-    this.jwtBlacklist.add(rawToken);
-  
-    return { message: 'Logged out successfully' };
+async logout(userId: number, token: string, res?: Response) {
+  const rawToken = token?.startsWith('Bearer ') ? token.slice(7) : token;
+
+  if (!rawToken) {
+    throw new BadRequestException('Token is missing or invalid');
   }
+
+  const user = await this.userRepo.findOne({
+    where: { id: userId },
+    relations: ['tokens'],
+  });
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const tokenEntity = user.tokens.find(
+    t => t.token === rawToken && t.type === TokenType.ACCESS,
+  );
+
+  if (tokenEntity) {
+    await this.tokenRepo.remove(tokenEntity);
+    this.jwtBlacklist.add(rawToken);
+  }
+
+  if (res) {
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+      path: '/',
+    });
+    res.clearCookie('rememberMe', {
+      httpOnly: false,
+      sameSite: 'lax',
+      secure: false,
+    });
+  }
+
+  return { message: 'Logged out successfully' };
+}
+
 }

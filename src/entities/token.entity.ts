@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
 export enum TokenType {
@@ -15,8 +15,13 @@ export class Token {
   @Column()
   token: string;
 
-  @ManyToOne(() => User, user => user.tokens, { onDelete: 'CASCADE' })
-  user: User;
+ @ManyToOne(() => User, user => user.tokens, {
+  onDelete: 'CASCADE',
+  nullable: false,
+  eager: false,
+})
+@JoinColumn({ name: 'userId' }) 
+user: User;
 
   @CreateDateColumn()
   createdAt: Date;

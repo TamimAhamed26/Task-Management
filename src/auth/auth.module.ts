@@ -30,6 +30,6 @@ import { EmailService } from '../email/email.service';
     },
   ],
   controllers: [AuthController],
-  exports: ['JWT_BLACKLIST'],
+  exports: ['JWT_BLACKLIST', AuthService],
 })
 export class AuthModule {}

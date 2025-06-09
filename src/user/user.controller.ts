@@ -39,14 +39,19 @@ export class UserController {
     return this.userService.updateProfile(id, dto);
   }
 
-  @Patch('password')
-  @UsePipes(ValidationPipe)
-  updatePassword(
-    @GetUser('id') id: number,
-    @Body() dto: UpdatePasswordDto,
-  ) {
-    return this.userService.updatePassword(id, dto);
-  }
+@Patch('password')
+@UsePipes(ValidationPipe)
+async updatePassword(
+  @GetUser('id') id: number,
+  @Body() dto: UpdatePasswordDto,
+) {
+  const message = await this.userService.updatePassword(id, dto);
+  return {
+    message,              // Same string as before
+    status: 'success',    // Optional: more metadata
+  };
+}
+
 
   @Put('avatar')
   @UseInterceptors(FileInterceptor('file'))

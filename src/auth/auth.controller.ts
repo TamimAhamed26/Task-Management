@@ -8,7 +8,8 @@ import {
   ValidationPipe,
   Req, UseGuards, 
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  Res
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -17,7 +18,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { TokenType } from 'src/entities/token.entity';
 import { Public } from './decorators/public.decorator';
 import { GetUser } from './decorators/get-user.decorator';
@@ -32,12 +33,36 @@ export class AuthController {
   signup(@Body() dto: CreateUserDto) {
     return this.authService.signup(dto);
   }
-  @Public()
-  @Post('login')
-  @UsePipes(ValidationPipe)
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
-  }
+@Public()
+@Post('login')
+@UsePipes(ValidationPipe)
+async login(@Body() dto: LoginDto & { rememberMe?: boolean }, @Res({ passthrough: true }) res: Response) {
+  const result = await this.authService.login(dto);
+
+  const maxAge = dto.rememberMe
+    ? 1000 * 60 * 60 * 24 * 7 // 7 days
+    : 1000 * 60 * 30; // 30 minutes
+
+  res.cookie('accessToken', result.accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+    maxAge,
+  });
+
+   res.cookie('rememberMe', dto.rememberMe?.toString() ?? 'false', {
+    httpOnly: false,     
+    secure: false,
+    sameSite: 'lax',
+    maxAge,
+  });
+
+  return result;
+}
+
+
+
+
   @Public()
   @Get('verify/:token')
   verify(@Param('token') token: string) {
@@ -69,6 +94,20 @@ async getResetTokenMessage(@Param('token') token: string) {
     };
   }
 }
+
+
+@Get('status')
+getStatus(@Req() req: Request) {
+  console.log('Token Status:', req.tokenStatus);
+  console.log('New Access Token (if refreshed):', req.newAccessToken);
+
+  return {
+    tokenStatus: req.tokenStatus || 'valid',
+    newAccessToken: req.newAccessToken || null,
+  };
+} 
+
+
 @Public()
 @Post('reset-password')
 resetPassword(@Body() dto: ResetPasswordDto) {
@@ -78,18 +117,20 @@ resetPassword(@Body() dto: ResetPasswordDto) {
 getCurrentUser(@GetUser() user: any) {
   return user;
 }
+
 @Post('logout')
 @UseGuards(AuthGuard('jwt'))
-async logout(@Req() req: Request) {
-  const authHeader = req.headers.authorization;
+async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  const token =
+    req.cookies?.accessToken ?? req.headers.authorization?.replace('Bearer ', '');
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new UnauthorizedException('No token provided');
+  if (!token) {
+    return { message: 'No token found; already logged out?' };
   }
 
-  const token = authHeader.split(' ')[1];
   const user = req.user as any;
-
-  return await this.authService.logout(user.id, token);
+  return await this.authService.logout(user.id, token, res);
 }
+
+
 }
